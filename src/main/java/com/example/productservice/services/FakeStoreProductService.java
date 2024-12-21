@@ -23,7 +23,7 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public Product getProductById(Long id) {
 // DTO stand for Data Transfer Object its contract between 2 services when i call your Api i will get data in this form
-        FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products" + id,
+        FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class); // Here we convert JSON to Object and its called  Descrilization
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
@@ -39,6 +39,12 @@ public class FakeStoreProductService implements ProductService{
             products.add(convertFakeStoreProductDtoToProduct(fakeStoreProductDto1));
         }
         return products;
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        restTemplate.put("https://fakestoreapi.com/products/" + id, product);// Time 51:32
+        return null;
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
@@ -60,5 +66,6 @@ public class FakeStoreProductService implements ProductService{
 
         return product;
     }
+
 
 }
