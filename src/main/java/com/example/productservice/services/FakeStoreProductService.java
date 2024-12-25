@@ -10,6 +10,7 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import javax.management.InstanceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,13 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws InstanceNotFoundException {
 // DTO stand for Data Transfer Object its contract between 2 services when i call your Api i will get data in this form
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class); // Here we convert JSON to Object and its called  Descrilization
+        if(fakeStoreProductDto == null) {
+            throw new InstanceNotFoundException("Product Not Found for Id : "+id);
+        }
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
 

@@ -3,8 +3,11 @@ package com.example.productservice.controllers;
 import com.example.productservice.ProductServiceApplication;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceNotFoundException;
 import java.util.List;
 
 @RestController  //This is for batter readbility its inheritated controller
@@ -19,9 +22,23 @@ public class ProductController {
     }
 
     @GetMapping("/{id}") // Its http verb and its provide path variable
-    public Product getProductById(@PathVariable("id") Long id){
+    public ResponseEntity<Product>  getProductById(@PathVariable("id") Long id) throws InstanceNotFoundException {
         System.out.println("Product ID : "+id);
-        return productService.getProductById(id);
+        Product product = null;
+        product = productService.getProductById(id);
+        /*try { // Handle exception instance of if block
+            product = productService.getProductById(id);
+        } catch (InstanceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
+        }*/
+        ResponseEntity<Product> productResponseEntity;
+    /*    if(product == null){
+            productResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND); // this is one way
+            return productResponseEntity;
+        }*/
+
+        productResponseEntity = new ResponseEntity<>(product, HttpStatus.OK);
+        return productResponseEntity;
     }
 
     @GetMapping()
@@ -33,5 +50,10 @@ public class ProductController {
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
         System.out.println(" Product ID : "+id);
         return productService.updateProduct(id,product);
+    }
+// Im trying to handle exception in a batter way instance of try catch
+    @ExceptionHandler(InstanceNotFoundException.class)
+    public ResponseEntity<String> handleInstanceNotFoundException(InstanceNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
     }
 }
