@@ -3,11 +3,16 @@ package com.example.productservice.services;
 import com.example.productservice.dtos.FakeStoreProductDto;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service  // Service is batter naming in service component is avaliable and spring will provide object of service
 public class FakeStoreProductService implements ProductService{
@@ -43,8 +48,23 @@ public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        restTemplate.put("https://fakestoreapi.com/products/" + id, product);// Time 51:32
-        return null;
+        // Here we copy RestTemplate put call
+        FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
+        fakeStoreProductDto.setTitle(product.getTitle());
+        fakeStoreProductDto.setDescription(product.getDescription());
+        fakeStoreProductDto.setPrice(product.getPrice());
+        // restTemplate help to call httpEntityCallback and in this we pass request
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakeStoreProductDto , FakeStoreProductDto.class);
+        // ResponseEntity comes as JSON we extract that
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate
+                .responseEntityExtractor(FakeStoreProductDto.class);
+
+
+       FakeStoreProductDto fakeStoreProductDto1 = restTemplate
+                .execute("https://fakestoreapi.com/products/" +id, HttpMethod.PUT, requestCallback,responseExtractor)
+                .getBody();
+        // convert dto to product and return
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto1);
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
