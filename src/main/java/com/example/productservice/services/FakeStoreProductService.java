@@ -3,11 +3,16 @@ package com.example.productservice.services;
 import com.example.productservice.dtos.FakeStoreProductDto;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service  // Service is batter naming in service component is avaliable and spring will provide object of service
 public class FakeStoreProductService implements ProductService{
@@ -23,7 +28,7 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public Product getProductById(Long id) {
 // DTO stand for Data Transfer Object its contract between 2 services when i call your Api i will get data in this form
-        FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products" + id,
+        FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class); // Here we convert JSON to Object and its called  Descrilization
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
@@ -39,6 +44,27 @@ public class FakeStoreProductService implements ProductService{
             products.add(convertFakeStoreProductDtoToProduct(fakeStoreProductDto1));
         }
         return products;
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        // Here we copy RestTemplate put call
+        FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
+        fakeStoreProductDto.setTitle(product.getTitle());
+        fakeStoreProductDto.setDescription(product.getDescription());
+        fakeStoreProductDto.setPrice(product.getPrice());
+        // restTemplate help to call httpEntityCallback and in this we pass request
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakeStoreProductDto , FakeStoreProductDto.class);
+        // ResponseEntity comes as JSON we extract that
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate
+                .responseEntityExtractor(FakeStoreProductDto.class);
+
+
+       FakeStoreProductDto fakeStoreProductDto1 = restTemplate
+                .execute("https://fakestoreapi.com/products/" +id, HttpMethod.PUT, requestCallback,responseExtractor)
+                .getBody();
+        // convert dto to product and return
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto1);
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
@@ -60,5 +86,6 @@ public class FakeStoreProductService implements ProductService{
 
         return product;
     }
+
 
 }

@@ -3,10 +3,7 @@ package com.example.productservice.controllers;
 import com.example.productservice.ProductServiceApplication;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,12 @@ public class ProductController {
 
     @GetMapping()
     public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+            return productService.getAllProducts();
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
+        System.out.println(" Product ID : "+id);
+        return productService.updateProduct(id,product);
     }
 }
