@@ -1,6 +1,8 @@
 package com.example.productservice.services;
 
 import com.example.productservice.dtos.FakeStoreProductDto;
+import com.example.productservice.dtos.ProductNotFoundExceptionDto;
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import org.springframework.http.HttpMethod;
@@ -27,12 +29,16 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getProductById(Long id) throws InstanceNotFoundException {
+    public Product getProductById(Long id) throws ProductNotFoundException {
 // DTO stand for Data Transfer Object its contract between 2 services when i call your Api i will get data in this form
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class); // Here we convert JSON to Object and its called  Descrilization
-        if(fakeStoreProductDto == null) {
+       /* if(fakeStoreProductDto == null) {
             throw new InstanceNotFoundException("Product Not Found for Id : "+id);
+        }*/
+        // Return Custome Exception
+        if(fakeStoreProductDto == null) {
+            throw new ProductNotFoundException(100L,"Product not found for id " + id);
         }
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }

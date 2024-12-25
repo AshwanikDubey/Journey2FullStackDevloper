@@ -1,6 +1,8 @@
 package com.example.productservice.controllers;
 
 import com.example.productservice.ProductServiceApplication;
+import com.example.productservice.dtos.ProductNotFoundExceptionDto;
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}") // Its http verb and its provide path variable
-    public ResponseEntity<Product>  getProductById(@PathVariable("id") Long id) throws InstanceNotFoundException {
+    public ResponseEntity<Product>  getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
         System.out.println("Product ID : "+id);
         Product product = null;
         product = productService.getProductById(id);
@@ -52,8 +54,16 @@ public class ProductController {
         return productService.updateProduct(id,product);
     }
 // Im trying to handle exception in a batter way instance of try catch
-    @ExceptionHandler(InstanceNotFoundException.class)
+   /* @ExceptionHandler(InstanceNotFoundException.class)
     public ResponseEntity<String> handleInstanceNotFoundException(InstanceNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+    }*/
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ProductNotFoundExceptionDto> handleInstanceNotFoundException(ProductNotFoundException e) {
+        ProductNotFoundExceptionDto productNotFoundExceptionDto = new ProductNotFoundExceptionDto();
+        productNotFoundExceptionDto.setErrorCode(e.getId());
+        productNotFoundExceptionDto.setErrorMessage(e.getMessage());
+        return new ResponseEntity<>(productNotFoundExceptionDto,HttpStatus.NOT_FOUND);
     }
 }
