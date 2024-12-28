@@ -59,11 +59,19 @@ public class ProductController {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
     }*/
 
-    @ExceptionHandler(ProductNotFoundException.class)
+ /*@ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ProductNotFoundExceptionDto> handleInstanceNotFoundException(ProductNotFoundException e) {
         ProductNotFoundExceptionDto productNotFoundExceptionDto = new ProductNotFoundExceptionDto();
         productNotFoundExceptionDto.setErrorCode(e.getId());
         productNotFoundExceptionDto.setErrorMessage(e.getMessage());
         return new ResponseEntity<>(productNotFoundExceptionDto,HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ProductNotFoundExceptionDto> handleNullPointerException(ProductNotFoundException e) {
+        ProductNotFoundExceptionDto productNotFoundExceptionDto = new ProductNotFoundExceptionDto();
+        productNotFoundExceptionDto.setErrorCode(e.getId());
+        productNotFoundExceptionDto.setErrorMessage(e.getMessage());
+        return new ResponseEntity<>(productNotFoundExceptionDto,HttpStatus.NOT_FOUND);
+    }*/
 }
