@@ -5,6 +5,7 @@ import com.example.productservice.dtos.ProductNotFoundExceptionDto;
 import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,8 @@ public class ProductController {
 
     ProductService productService;
 
-    public ProductController(ProductService productService) { // this is called Constructor injection
-       this.productService = productService;
+    public ProductController(@Qualifier("SelfProductService") ProductService productService) { // this is called Constructor injection
+       this.productService = productService; // @Qualifier("SelfProductService") can change easily  @Qualifier("FakeStoreService")
     }
 
     @GetMapping("/{id}") // Its http verb and its provide path variable
@@ -74,4 +75,11 @@ public class ProductController {
         productNotFoundExceptionDto.setErrorMessage(e.getMessage());
         return new ResponseEntity<>(productNotFoundExceptionDto,HttpStatus.NOT_FOUND);
     }*/
+
+    //Create a product
+    @PutMapping
+    public Product createProduct(@RequestBody Product product){
+        System.out.println(" Product ID : "+product.getId());
+        return productService.createProduct(product);
+    }
 }

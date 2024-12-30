@@ -1,9 +1,10 @@
 package com.example.productservice.models;
 
+import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
-public class Category {
-    private Long id;
-    private String title;
+@Entity
+public class Category extends BaseModel{
+    String description;
 }
