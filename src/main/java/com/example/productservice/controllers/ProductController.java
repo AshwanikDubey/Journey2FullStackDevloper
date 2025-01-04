@@ -19,7 +19,7 @@ import java.util.List;
 public class ProductController {
 
     ProductService productService;
-
+// @Qualifier("SelfProductService") here spring responsibility to create object of ProductService and inject it
     public ProductController(@Qualifier("SelfProductService") ProductService productService) { // this is called Constructor injection
        this.productService = productService; // @Qualifier("SelfProductService") can change easily  @Qualifier("FakeStoreService")
     }
@@ -77,7 +77,7 @@ public class ProductController {
     }*/
 
     //Create a product
-    @PutMapping
+    @PostMapping
     public Product createProduct(@RequestBody Product product){
         System.out.println(" Product ID : "+product.getId());
         return productService.createProduct(product);
