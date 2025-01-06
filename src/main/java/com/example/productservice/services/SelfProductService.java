@@ -3,6 +3,7 @@ package com.example.productservice.services;
 import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
+import com.example.productservice.projections.ProductTitleAndDescription;
 import com.example.productservice.repos.CategoryRepo;
 import com.example.productservice.repos.ProductRepo;
 import org.springframework.context.annotation.Primary;
@@ -24,7 +25,18 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product getProductById(Long id) throws ProductNotFoundException {
-        return null;
+        // BY Using HQL
+        ProductTitleAndDescription productTitleAndDescription = productRepo.getProductTitleAndDescription(id);
+        System.out.println("Projection :: "+productTitleAndDescription.getTitle() + " " + productTitleAndDescription.getDescription());
+
+        // By Using SQl
+        ProductTitleAndDescription productTitleAndDescriptionSQL = productRepo.getProductTitleAndDescription(id);
+        System.out.println("Projection :: "+productTitleAndDescriptionSQL.getTitle() + " " + productTitleAndDescriptionSQL.getDescription());
+
+
+        //return ProductTitleAndDescription.getProductTitleAndDescription(id);
+        return productRepo.findById(id).orElseThrow(ProductNotFoundException::new);
+        //return productRepo.findById(id).get();// By default, in JPA collections is Lazy Loaded
     }
 
     @Override
