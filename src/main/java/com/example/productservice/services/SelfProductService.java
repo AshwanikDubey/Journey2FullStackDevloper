@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("SelfProductService") // specify a name and pass name as qualifier
+// @Primary is used to avoid ambiguity via marking one bean as a Primary or using @Qualifier
 @Primary //  required a single bean, but 2 were found: to avoid we used @primary annotation or self-service declared as Qualifier on controller
 public class SelfProductService implements ProductService {
 
