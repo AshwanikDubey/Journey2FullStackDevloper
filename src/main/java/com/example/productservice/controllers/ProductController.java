@@ -21,6 +21,7 @@ public class ProductController {
     ProductService productService;
 // @Qualifier("SelfProductService") here spring responsibility to create object of ProductService and inject it
     public ProductController(@Qualifier("SelfProductService") ProductService productService) { // this is called Constructor injection
+        System.out.println("SelfProductService RUN>>>");
        this.productService = productService; // @Qualifier("SelfProductService") can change easily  @Qualifier("FakeStoreService")
     }
 
