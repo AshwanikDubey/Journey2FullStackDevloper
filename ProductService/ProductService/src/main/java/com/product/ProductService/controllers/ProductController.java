@@ -1,12 +1,14 @@
 package com.product.ProductService.controllers;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.product.ProductService.models.Product;
 import com.product.ProductService.services.ProductService;
 
 @RestController()
-@RequestMapping("/")
+@RequestMapping("/products")
 public class ProductController {
 	
 	ProductService productService;
@@ -15,13 +17,15 @@ public class ProductController {
 		this.productService =productService;
 	}
 	
-	@GetMapping("products/")
-	public Product getProduct() {
-		return productService.getProduct();
+	@GetMapping("/")
+	public List<Product> getAllProduct() {
+		System.out.println("getProduct is called !!! ");
+		return productService.getAllProduct();
 	}
 	
 	@GetMapping("/{id}")
 	public Product getProductById(@PathVariable("id") Long id) {
+		System.out.println("getProductById is called !!! ");
 		return productService.getProductById(id);
 	}
 }

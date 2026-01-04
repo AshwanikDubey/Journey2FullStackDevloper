@@ -1,11 +1,16 @@
-package com.product.ProductService.models;
+package com.product.ProductService.dtos;
+
  
-public class Product {
+
+import com.product.ProductService.models.Category;
+
+ 
+public class FakeStoreProductDto {
 	long id;
-	String title;
-	double price;
+	String title ;
+	double price ;
 	String description;
-	Category category;
+	String category;
 	public long getId() {
 		return id;
 	}
@@ -30,12 +35,13 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
-	}
+	} 
 	
 	
-}
+	
+ }
