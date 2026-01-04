@@ -3,7 +3,11 @@ package com.product.ProductService.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import com.product.ProductService.dtos.FakeStoreProductDto;
@@ -59,8 +63,34 @@ public class FakeStoreProductService implements ProductService {
 	    return product;
 	}
 
-	
-	
-	
-
+	@Override
+	public Product replaceProduct(long id, Product product) {
+		// Update a product based on their Id and product data
+		//Here put only update not return product so we override put method
+		//restTemplate.put("https://fakestoreapi.com/products/"+id, product);
+		
+		//Convert Product to Dto (Serialization)
+		FakeStoreProductDto fsp = new FakeStoreProductDto();
+		fsp.setCategory(product.getCategory().getTitle());
+		fsp.setDescription(product.getDescription());
+		fsp.setId(product.getId());
+		fsp.setPrice(product.getPrice());
+		fsp.setTitle(product.getTitle());
+		
+		
+		//Create requestCallback and pass to execute method
+		RequestCallback requestCallback = restTemplate
+				.httpEntityCallback(fsp,FakeStoreProductDto.class);
+		
+		//Custom responseExtractor for FakeStoreProductDto class
+		ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = 
+				restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
+		
+		FakeStoreProductDto fsto= restTemplate.execute("https://fakestoreapi.com/products/"+id,
+				HttpMethod.PUT,
+				requestCallback, responseExtractor).getBody();
+System.out.println("Updated Product");
+		return convertDtoToObject(fsto); 
+	}
+ 
 }

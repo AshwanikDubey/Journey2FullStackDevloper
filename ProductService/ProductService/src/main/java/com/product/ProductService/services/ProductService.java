@@ -9,4 +9,6 @@ public interface ProductService {
 	public List<Product> getAllProduct();
 	
 	Product getProductById(Long id);
+
+	public Product replaceProduct(long id, Product product);
 }

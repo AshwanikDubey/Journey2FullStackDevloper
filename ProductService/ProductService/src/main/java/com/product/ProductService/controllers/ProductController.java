@@ -28,4 +28,9 @@ public class ProductController {
 		System.out.println("getProductById is called !!! ");
 		return productService.getProductById(id);
 	}
+	
+	@PutMapping("/{id}")
+	public Product updateProduct(@PathVariable("id") long id,@RequestBody Product product) {
+		return productService.replaceProduct(id,product);
+	}
 }
