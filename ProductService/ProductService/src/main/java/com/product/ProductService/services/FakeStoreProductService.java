@@ -3,7 +3,8 @@ package com.product.ProductService.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpHeaders;
+import javax.management.InstanceNotFoundException;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,17 +39,18 @@ public class FakeStoreProductService implements ProductService {
 	}
   
 	@Override
-	public Product getProductById(Long id) { 
+	public Product getProductById(Long id) throws InstanceNotFoundException { 
 		FakeStoreProductDto fakeStoreProductDTo= restTemplate
 				.getForObject("https://fakestoreapi.com/products/"+id,
 				FakeStoreProductDto.class);
+		 if (fakeStoreProductDTo == null) {
+		        throw new InstanceNotFoundException("Product not found for Id : "+id); // safeguard against null input
+		    }
 		 return convertDtoToObject(fakeStoreProductDTo);
 	}
 	
 	private Product convertDtoToObject(FakeStoreProductDto fakeStoreProductDto) { 
-	    if (fakeStoreProductDto == null) {
-	        return null; // safeguard against null input
-	    }
+	   
 
 	    Product product = new Product();
 	    product.setId(fakeStoreProductDto.getId());

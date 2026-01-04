@@ -2,6 +2,8 @@ package com.product.ProductService.controllers;
 
 import java.util.List;
 
+import javax.management.InstanceNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
+	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws InstanceNotFoundException   {
 		System.out.println("getProductById is called !!! ");
 		Product product =  productService.getProductById(id);
 		ResponseEntity<Product> ps;
@@ -58,5 +60,10 @@ public class ProductController {
 		// If product present return ok with Product
 		ps = new ResponseEntity<>(product,HttpStatus.OK);
 		return ps; 
+	}
+	
+	@ExceptionHandler(InstanceNotFoundException.class)
+	public ResponseEntity<String> handleInstanceNotFound(InstanceNotFoundException ex){
+		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
 	}
 }
