@@ -63,7 +63,7 @@ public class ProductController {
 	}
 	
 	@ExceptionHandler(InstanceNotFoundException.class)
-	public ResponseEntity<String> handleInstanceNotFound(InstanceNotFoundException ex){
+	private ResponseEntity<String> handleInstanceNotFound(InstanceNotFoundException ex){
 		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
 	}
 }
