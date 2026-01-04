@@ -39,8 +39,7 @@ public class FakeStoreProductService implements ProductService {
 		 return convertDtoToObject(fakeStoreProductDTo);
 	}
 	
-	private Product convertDtoToObject(FakeStoreProductDto fakeStoreProductDto) {
-		System.out.println("Inside convertDtoToObject !!! ");
+	private Product convertDtoToObject(FakeStoreProductDto fakeStoreProductDto) { 
 	    if (fakeStoreProductDto == null) {
 	        return null; // safeguard against null input
 	    }
