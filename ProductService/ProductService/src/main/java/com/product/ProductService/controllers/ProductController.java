@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.product.ProductService.exception.ProductNotFound;
 import com.product.ProductService.models.Product;
 import com.product.ProductService.services.ProductService;
 
@@ -28,7 +29,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws InstanceNotFoundException   {
+	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws ProductNotFound   {
 		System.out.println("getProductById is called !!! ");
 		Product product =  productService.getProductById(id);
 		ResponseEntity<Product> ps;
@@ -61,7 +62,7 @@ public class ProductController {
 		ps = new ResponseEntity<>(product,HttpStatus.OK);
 		return ps; 
 	}
-	
+	//@ExceptionHandler is like a filter run all the method and based on Exception provide response.
 	@ExceptionHandler(InstanceNotFoundException.class)
 	private ResponseEntity<String> handleInstanceNotFound(InstanceNotFoundException ex){
 		return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);

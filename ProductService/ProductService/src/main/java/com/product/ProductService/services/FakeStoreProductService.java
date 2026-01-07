@@ -14,6 +14,7 @@ import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import com.product.ProductService.dtos.FakeStoreProductDto;
+import com.product.ProductService.exception.ProductNotFound;
 import com.product.ProductService.models.Category;
 import com.product.ProductService.models.Product;
 
@@ -39,12 +40,12 @@ public class FakeStoreProductService implements ProductService {
 	}
   
 	@Override
-	public Product getProductById(Long id) throws InstanceNotFoundException { 
+	public Product getProductById(Long id) throws ProductNotFound { 
 		FakeStoreProductDto fakeStoreProductDTo= restTemplate
 				.getForObject("https://fakestoreapi.com/products/"+id,
 				FakeStoreProductDto.class);
 		 if (fakeStoreProductDTo == null) {
-		        throw new InstanceNotFoundException("Product not found for Id : "+id); // safeguard against null input
+		        throw new ProductNotFound(5101L,"Product not found for Id : "+id); // safeguard against null input
 		    }
 		 return convertDtoToObject(fakeStoreProductDTo);
 	}
